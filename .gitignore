@@ -1,17 +1,19 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
+# =========================
+# Angular Frontend
+# =========================
 /dist
 /tmp
 /out-tsc
 /bazel-out
-
-# Node
+/.angular/cache
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# IDEs and editors
+# =========================
+# IDEs and Editors
+# =========================
 .idea/
 .project
 .classpath
@@ -19,8 +21,6 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
-
-# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -28,15 +28,37 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
+# =========================
+# System Files
+# =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# Flask Backend
+# =========================
+# Ignore virtual environment
+src/app/backend/venv/
+src/app/backend/__pycache__/
+src/app/backend/**/__pycache__/
+
+# Ignore SQLite or temporary databases
+src/app/backend/*.db
+src/app/backend/instance/
+src/app/backend/*.sqlite3
+
+# Ignore Python cache and compiled files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore logs and temporary files
+*.log
+*.bak
+*.tmp
+
+# =========================
+# Environment and Secrets
+# =========================
+.env
+.env.*
