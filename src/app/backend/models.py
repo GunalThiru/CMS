@@ -1,0 +1,64 @@
+from datetime import datetime, timezone
+from extensions import db
+
+# -------------------------
+# User model
+# -------------------------
+class User(db.Model):
+    __tablename__ = 'user'
+
+    uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    dob = db.Column(db.String(20), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='customer')
+
+    # Relationships
+    complaints = db.relationship('Complaint', backref='user', lazy=True)
+    assignments = db.relationship(
+        'ComplaintAssignment',
+        backref='staff_member',
+        lazy=True,
+        foreign_keys='ComplaintAssignment.assigned_to'  # 👈 tell SQLAlchemy which FK to use
+    )
+
+
+# -------------------------
+# Complaint model
+# -------------------------
+class Complaint(db.Model):
+    __tablename__ = 'complaint'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(50), default='Pending')
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+
+    assignments = db.relationship('ComplaintAssignment', backref='complaint', lazy=True)
+
+
+# -------------------------
+# Complaint Assignment model
+# -------------------------
+class ComplaintAssignment(db.Model):
+    __tablename__ = 'complaint_assignment'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    complaint_id = db.Column(db.Integer, db.ForeignKey('complaint.id'), nullable=False)
+    assigned_to = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
+    remarks = db.Column(db.String(500))
+    updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'complaint_id': self.complaint_id,
+            'assigned_to': self.assigned_to,
+            'remarks': self.remarks,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }

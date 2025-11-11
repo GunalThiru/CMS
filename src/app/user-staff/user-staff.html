@@ -1,0 +1,34 @@
+<div class="staff-container">
+  <h2>Staff - Assigned Complaints</h2>
+
+  <table class="complaints-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Remarks</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let c of complaints">
+        <td>{{ c.id }}</td>
+        <td>{{ c.user_id }}</td>
+        <td>{{ c.title }}</td>
+        <td class="wrap-text">{{ c.description }}</td>
+        <td>
+          <select [(ngModel)]="c.status">
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </td>
+        <td><input type="text" [(ngModel)]="c.remarks" placeholder="Remarks" /></td>
+        <td><button (click)="updateComplaint(c)">Update</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

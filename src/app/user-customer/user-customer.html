@@ -1,0 +1,49 @@
+<div class="dashboard-container">
+  <h1>Welcome, Customer!</h1>
+
+  <!-- Submit Complaint Form -->
+  <section class="submit-complaint">
+    <h2>Submit a Complaint</h2>
+    <form #complaintForm="ngForm" (ngSubmit)="submitComplaint(complaintForm)">
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Title"
+          [(ngModel)]="newComplaint.title"
+          name="title"
+          #titleInput="ngModel"
+          required
+        />
+        <span
+          *ngIf="titleInput.invalid && (titleInput.dirty || titleInput.touched)"
+          class="error-msg"
+          >Title is required</span
+        >
+
+        <textarea
+          placeholder="Description"
+          [(ngModel)]="newComplaint.description"
+          name="description"
+          #descInput="ngModel"
+          required
+        ></textarea>
+        <span
+          *ngIf="descInput.invalid && (descInput.dirty || descInput.touched)"
+          class="error-msg"
+          >Description is required</span
+        >
+
+        <button type="submit" [disabled]="complaintForm.invalid">
+          Submit
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+  </section>
+
+ 
+  <!-- Complaints List Component -->
+ 
+</div>

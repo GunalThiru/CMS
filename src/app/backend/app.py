@@ -1,66 +1,52 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import mysql.connector
-import bcrypt
+from flask import Flask, jsonify
+from config import DevelopmentConfig
+from extensions import db, cors
+from routes import register_routes
+from routes.customer_complaint import customer_bp
+from routes.admin_complaint import admin_bp   # ✅ add this import
+from routes.staff_complaint import staff_bp   # ✅ (you’ll create this soon)
 
-app = Flask(__name__)
-CORS(app, origins=["http://localhost:4200"])  # allow requests from Angular frontend
+def create_app():
+    """
+    Factory function to create and configure the Flask app.
+    Keeps things modular and testable.
+    """
+    app = Flask(__name__)
 
-# ------------------ MySQL Connection ------------------
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",        # your MySQL username
-    password="",        # your MySQL password
-    database="cms"  # make sure you created this DB
-)
+    # ✅ Load configuration (DB URL, etc.)
+    app.config.from_object(DevelopmentConfig)
 
-cursor = db.cursor(dictionary=True)
+    # ✅ Initialize extensions
+    db.init_app(app)
+    cors.init_app(
+        app,
+        resources={r"/*": {"origins": ["http://localhost:4200", "http://localhost:5173"]}},
+        supports_credentials=True
+    )
 
-# ------------------ Signup Route ------------------
-@app.route('/signup', methods=['POST'])
-def signup():
-    data = request.json
-    name = data['name']
-    email = data['email']
-    password = data['password']
+    # ✅ Register all route blueprints
+    register_routes(app)
+    app.register_blueprint(customer_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(staff_bp)
 
-    # hash password for security
-    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # ✅ Health check route (optional)
+    @app.route('/')
+    def health():
+        return jsonify({"status": "ok", "message": "Flask backend running"}), 200
 
-    try:
-        cursor.execute(
-            "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-            (name, email, hashed.decode('utf-8'))
-        )
-        db.commit()
-        print("User inserted!")  # Debug print
-        return jsonify({'message': 'User created successfully ✅'}), 201
-    except mysql.connector.IntegrityError as e:
-        print("IntegrityError:", e)  # Debug print
-        return jsonify({'message': 'Email already exists ❌'}), 400
+    # ✅ Global error handler
+    @app.errorhandler(500)
+    def handle_500_error(e):
+        response = jsonify({'message': 'Internal Server Error', 'error': str(e)})
+        response.status_code = 500
+        return response
 
-# ------------------ Login Route ------------------
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.json
-    email = data['email']
-    password = data['password']
+    return app
 
-    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-    user = cursor.fetchone()
 
-    if not user:
-        return jsonify({'message': 'Invalid email or password ❌'}), 401
-
-    # verify password
-    if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
-        return jsonify({
-            'message': 'Login successful ✅',
-            'user': {'name': user['name'], 'email': user['email']}
-        })
-    else:
-        return jsonify({'message': 'Invalid email or password ❌'}), 401
-
-# ------------------ Run Server ------------------
 if __name__ == '__main__':
+    app = create_app()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, port=5000)

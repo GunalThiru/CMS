@@ -1,48 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { LoginAuthService, User } from './services/login-auth';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule],
-  template: `
-    <nav>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-     
-    </nav>
-    <router-outlet></router-outlet>
-  `,
-  styles: [`
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      background: white;
-      padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      z-index: 100;
-    }
-    a {
-      color: #5563DE;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-      cursor:pointer;
-    }
-    a:hover {
-      color: #3848b1;
-    }
-    .active {
-      border-bottom: 2px solid #5563DE;
-      padding-bottom: 4px;
-    }
-  `]
+  imports: [CommonModule, RouterModule],
+  templateUrl: './app.html',
+  styleUrls: ['./app.css']
 })
-export class AppComponent {
-  title = 'CMS';
+export class AppComponent implements OnInit {
+  userRole: string | null = null;
+   userId: number | null = null;
+
+  constructor(
+    private loginAuthService: LoginAuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loginAuthService.currentUser$.subscribe((user: User | null) => {
+      this.userRole = user?.role || null;
+      this.userId = user?.id || null;
+    });
+  }
+  logout(): void {
+    this.loginAuthService.logout();
+  }
 }

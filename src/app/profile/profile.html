@@ -1,0 +1,44 @@
+<div class="profile-container" *ngIf="user; else loading">
+  <h2>{{ user.name }}'s Profile</h2>
+
+  <!-- Name -->
+  <label>Name:</label>
+  <input [(ngModel)]="user.name" [readonly]="!editMode" />
+
+  <!-- Email (always readonly) -->
+  <label>Email:</label>
+  <input [(ngModel)]="user.email" readonly />
+
+  <!-- Phone -->
+  <label>Phone:</label>
+  <input [(ngModel)]="user.phone" [readonly]="!editMode" />
+
+  <!-- DOB -->
+  <label>DOB:</label>
+  <input type="date" [(ngModel)]="user.dob" [readonly]="!editMode" />
+
+  <!-- Age (readonly — auto-calculated usually) -->
+  <label>Age:</label>
+  <input [(ngModel)]="user.age" readonly />
+
+  <!-- Role (readonly always) -->
+  <label>Role:</label>
+  <input [(ngModel)]="user.role" readonly />
+
+  <!-- Buttons -->
+  <div class="button-group" *ngIf="editable">
+    <!-- Show 'Edit' when not in edit mode -->
+    <button *ngIf="!editMode" (click)="toggleEdit()">Edit</button>
+
+    <!-- Show 'Save' and 'Cancel' when editing -->
+    <button *ngIf="editMode" (click)="saveProfile()">Save</button>
+    <button *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
+  </div>
+</div>
+
+<!-- Loading Template -->
+<ng-template #loading>
+  <div class="profile-container loading">
+    Loading profile...
+  </div>
+</ng-template>

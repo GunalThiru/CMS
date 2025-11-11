@@ -1,0 +1,81 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  min-height: 100vh;
+}
+
+h1 {
+  color: #4b3cbf;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* --- Form --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 6px rgba(102, 126, 234, 0.3);
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* --- Error / Success Messages --- */
+.error-msg {
+  color: red;
+  font-size: 0.85rem;
+}
+
+.success-msg {
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* --- Buttons --- */
+button {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 0.8rem;
+}
+
+button:hover:enabled {
+  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
+  transform: scale(1.03);
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+

@@ -1,2 +1,43 @@
-<!-- 🔹 Where the routed components will load -->
-<router-outlet></router-outlet>
+<!-- Public Navbar (before login) -->
+<nav class="navbar" *ngIf="!userRole">
+  <div class="logo"><a routerLink="/">CMS</a></div>
+  <div class="nav-container">
+    <a routerLink="/signup" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">SignUp</a>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+  </div>
+</nav>
+
+<!-- Admin Navbar -->
+<nav class="navbar" *ngIf="userRole === 'admin'">
+  <div class="logo"><a routerLink="/admin">Admin Panel</a></div>
+  <div class="nav-container">
+    <a [routerLink]="['/profile', userId]">Profile</a>
+    <a routerLink="/admin/users">Users</a>
+    <a (click)="logout()">Logout</a>
+  </div>
+</nav>
+
+<!-- Staff Navbar -->
+<nav class="navbar" *ngIf="userRole === 'staff'">
+  <div class="logo"><a routerLink="/staff">Staff Portal</a></div>
+  <div class="nav-container">
+    <a routerLink="/staff/tasks">Tasks</a>
+    <a [routerLink]="['/profile', userId]">Profile</a>
+    <a (click)="logout()">Logout</a>
+  </div>
+</nav>
+
+<!-- Customer Navbar -->
+<nav class="navbar" *ngIf="userRole === 'customer'">
+  <div class="logo"><a routerLink="/customer">Customer Portal</a></div>
+  <div class="nav-container">
+    <a routerLink="/customer/complaints">My Complaints</a>
+    <a [routerLink]="['/profile', userId]">Profile</a>
+    <a (click)="logout()">Logout</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="content">
+  <router-outlet></router-outlet>
+</main>
