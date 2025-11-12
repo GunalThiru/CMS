@@ -11,7 +11,7 @@ staff_bp = Blueprint('staff', __name__)
 @staff_bp.route('/staff/complaints/<int:staff_id>', methods=['GET'])
 def get_assigned_complaints(staff_id):
     assignments = ComplaintAssignment.query.filter_by(assigned_to=staff_id).all()
-    complaints = [a.complaint.to_dict() | {"remarks": a.remarks} for a in assignments]
+    complaints = [a.complaints.to_dict() | {"remarks": a.remarks} for a in assignments]
     return jsonify(complaints)
 
 # ----------------------------

@@ -21,6 +21,7 @@ export class UserStaffComponent implements OnInit {
     this.loadComplaints();
   }
 
+  /** Load all complaints assigned to this staff */
   loadComplaints(): void {
     this.loading = true;
     this.staffService.getAssignedComplaints(this.staffId).subscribe({
@@ -29,24 +30,31 @@ export class UserStaffComponent implements OnInit {
         this.loading = false;
       },
       error: (err: any) => {
-        console.error(err);
+        console.error('Error loading complaints:', err);
         this.loading = false;
       }
     });
   }
 
+  /** Update complaint details (remarks/status) */
   updateComplaint(c: any): void {
     const data = {
       complaint_id: c.id,
       remarks: c.remarks,
       status: c.status
     };
+
     this.staffService.updateComplaint(data).subscribe({
       next: () => {
         alert('Complaint updated successfully!');
         this.loadComplaints();
       },
-      error: (err: any) => console.error(err)
+      error: (err: any) => console.error('Error updating complaint:', err)
     });
+  }
+
+  /** Track complaints efficiently in ngFor */
+  trackByComplaintId(index: number, item: any): number {
+    return item.id;
   }
 }

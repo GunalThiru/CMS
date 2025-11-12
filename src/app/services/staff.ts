@@ -6,17 +6,21 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StaffComplaintService {
-  private baseUrl = 'http://127.0.0.1:5000'; // Flask backend
+  private baseUrl = 'http://127.0.0.1:5000'; // Flask backend URL
 
   constructor(private http: HttpClient) {}
 
-  // Get complaints assigned to a specific staff
+  /** Get all complaints assigned to a specific staff member */
   getAssignedComplaints(staffId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/staff/complaints/${staffId}`);
   }
 
-  // Update complaint remarks or status
-  updateComplaint(data: { complaint_id: number; remarks?: string; status?: string }): Observable<any> {
+  /** Update complaint remarks or status */
+  updateComplaint(data: {
+    complaint_id: number;
+    remarks?: string;
+    status?: string;
+  }): Observable<any> {
     return this.http.put(`${this.baseUrl}/staff/update`, data);
   }
 }
