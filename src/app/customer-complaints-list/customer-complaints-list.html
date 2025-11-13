@@ -1,102 +1,87 @@
- <!-- Complaints List Table -->
-  <section class="complaints-list">
-    <h2>Your Complaints</h2>
+<!-- Current Complaints -->
+<section class="complaints-list">
+  <h2>Your Complaints</h2>
 
-    <table class="complaints-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+  <table class="complaints-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-      <tbody>
-        <tr *ngFor="let complaint of complaints">
-          <!-- Complaint ID -->
-          <td>{{ complaint.id }}</td>
+    <tbody>
+      <tr *ngFor="let complaint of openComplaints">
+        <td>{{ complaint.id }}</td>
 
-          <!-- Title -->
-          <td *ngIf="!complaint.editMode">{{ complaint.title }}</td>
-          <td *ngIf="complaint.editMode">
-            <input
-              type="text"
-              [(ngModel)]="complaint.editTitle"
-              [disabled]="complaint.status !== 'open'"
-            />
-          </td>
+        <td *ngIf="!complaint.editMode">{{ complaint.title }}</td>
+        <td *ngIf="complaint.editMode">
+          <input type="text" [(ngModel)]="complaint.editTitle" />
+        </td>
 
-          <!-- Description -->
-          <td *ngIf="!complaint.editMode">{{ complaint.description }}</td>
-          <td *ngIf="complaint.editMode">
-            <textarea
-              [(ngModel)]="complaint.editDescription"
-              [disabled]="complaint.status !== 'open'"
-            ></textarea>
-          </td>
+        <td *ngIf="!complaint.editMode">{{ complaint.description }}</td>
+        <td *ngIf="complaint.editMode">
+          <textarea [(ngModel)]="complaint.editDescription"></textarea>
+        </td>
 
-          <!-- Status -->
-          <!-- Status column -->
-<td
-  [ngClass]="{
-    'status-open': complaint.status === 'open',
-    'status-inprogress': complaint.status === 'in_progress',
-    'status-resolved': complaint.status === 'resolved'
-  }"
->
-  {{ complaint.status }}
-</td>
+        <td
+          [ngClass]="{
+            'status-open': complaint.status === 'open',
+            'status-inprogress': complaint.status === 'in_progress',
+            'status-resolved': complaint.status === 'resolved'
+          }"
+        >
+          {{ complaint.status }}
+        </td>
 
+        <td class="actions">
+          <!-- Regular edit/delete for open -->
+          <ng-container *ngIf="complaint.status === 'open'; else resolvedActions">
+            <button *ngIf="!complaint.editMode" class="table-btn edit-btn" (click)="enableEdit(complaint)">Edit</button>
+            <button *ngIf="complaint.editMode" class="table-btn save-btn" (click)="saveEdit(complaint)">Save</button>
+            <button *ngIf="complaint.editMode" class="table-btn cancel-btn" (click)="cancelEdit(complaint)">Cancel</button>
+            <button class="table-btn delete-btn" (click)="deleteComplaint(complaint.id!, complaint.status)">Delete</button>
+          </ng-container>
 
-          <!-- Actions -->
-          <td class="actions">
-            <!-- Edit / Save / Cancel buttons -->
-            <ng-container *ngIf="complaint.status === 'open'; else disabledActions">
-              <button
-                *ngIf="!complaint.editMode"
-                class="table-btn edit-btn"
-                (click)="enableEdit(complaint)"
-                [disabled]="currentlyEditingId && currentlyEditingId !== complaint.id"
-              >
-                Edit
-              </button>
-
-              <button
-                *ngIf="complaint.editMode"
-                class="table-btn save-btn"
-                (click)="saveEdit(complaint)"
-              >
-                Save
-              </button>
-
-              <button
-                *ngIf="complaint.editMode"
-                class="table-btn cancel-btn"
-                (click)="cancelEdit(complaint)"
-              >
-                Cancel
-              </button>
-
-           
-
-                <button
-                  class="table-btn delete-btn"
-                  (click)="deleteComplaint(complaint.id!, complaint.status)"
-                  [disabled]="complaint.editMode || (currentlyEditingId && currentlyEditingId !== complaint.id)"
+          <!-- Resolved complaints: show close option -->
+          <ng-template #resolvedActions>
+            <button
+              *ngIf="complaint.status === 'resolved'"
+              class="table-btn close-btn"
+              (click)="closeComplaint(complaint)"
             >
-                  Delete
-                </button>
-            </ng-container>
+              Close Complaint
+            </button>
+            <span *ngIf="complaint.status === 'closed'" class="closed-text">Closed</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-            <!-- Disabled actions for non-open complaints -->
-            <ng-template #disabledActions>
-              <button class="table-btn disabled-btn" disabled>Edit</button>
-              <button class="table-btn disabled-btn" disabled>Delete</button>
-            </ng-template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+<!-- History Section -->
+<section *ngIf="historyComplaints.length > 0" class="complaints-history">
+  <h2>Closed Complaints (History)</h2>
+  <table class="complaints-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let complaint of historyComplaints">
+        <td>{{ complaint.id }}</td>
+        <td>{{ complaint.title }}</td>
+        <td>{{ complaint.description }}</td>
+        <td class="status-closed">Closed</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

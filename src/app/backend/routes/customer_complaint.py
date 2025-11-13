@@ -26,12 +26,14 @@ def get_complaints(user_id):
 @customer_bp.route('/complaints/<int:complaint_id>', methods=['PUT'])
 def update_complaint(complaint_id):
     complaint = Complaint.query.get_or_404(complaint_id)
-    if complaint.status != 'open':
-        return jsonify({'error': 'Only open complaints can be edited'}), 400
 
     data = request.json
+    if complaint.status not in ['open', 'resolved']:
+        return jsonify({'error': 'Only open or resolved complaints can be modified'}), 400
+
     complaint.title = data.get('title', complaint.title)
     complaint.description = data.get('description', complaint.description)
+    complaint.status = data.get('status', complaint.status)
     db.session.commit()
     return jsonify({'message': 'Complaint updated successfully', 'complaint': complaint.to_dict()})
 
@@ -44,3 +46,14 @@ def delete_complaint(complaint_id):
     db.session.delete(complaint)
     db.session.commit()
     return jsonify({'message': 'Complaint deleted successfully'})
+
+# ✅ New: Close a resolved complaint (move to history)
+@customer_bp.route('/complaints/close/<int:complaint_id>', methods=['PUT'])
+def close_complaint(complaint_id):
+    complaint = Complaint.query.get_or_404(complaint_id)
+    if complaint.status != 'resolved':
+        return jsonify({'error': 'Only resolved complaints can be closed'}), 400
+
+    complaint.status = 'closed'
+    db.session.commit()
+    return jsonify({'message': 'Complaint closed successfully', 'complaint': complaint.to_dict()}), 200

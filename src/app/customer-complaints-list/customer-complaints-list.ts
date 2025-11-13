@@ -111,4 +111,33 @@ export class CustomerComplaintsListComponent implements OnInit {
       }
     });
   }
+
+  closeComplaint(complaint: EditableComplaint) {
+  if (complaint.status !== 'resolved') {
+    this.errorMessage = 'Only resolved complaints can be closed.';
+    return;
+  }
+
+  if (!confirm('Do you want to close this resolved complaint?')) return;
+
+  this.complaintService.closeComplaint(complaint.id!).subscribe({
+    next: (res: any) => {
+      this.successMessage = res.message;
+      this.errorMessage = '';
+      this.loadComplaints();
+    },
+    error: () => {
+      this.errorMessage = 'Failed to close complaint';
+    }
+  });
+}
+
+get openComplaints() {
+  return this.complaints.filter(c => c.status !== 'closed');
+}
+
+get historyComplaints() {
+  return this.complaints.filter(c => c.status === 'closed');
+}
+
 }

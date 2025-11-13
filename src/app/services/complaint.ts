@@ -7,7 +7,7 @@ export interface Complaint {
   user_id: number;
   title: string;
   description: string;
-  status?: 'open' | 'in_progress' | 'resolved';
+  status?: 'open' | 'in_progress' | 'resolved' | 'closed';
   created_at?: string;
   updated_at?: string;
 }
@@ -34,4 +34,10 @@ export class ComplaintService {
   deleteComplaint(complaintId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${complaintId}`);
   }
+
+  // services/complaint.ts
+closeComplaint(id: number) {
+  return this.http.put(`${this.apiUrl}/complaints/close/${id}`, {});
+}
+
 }
