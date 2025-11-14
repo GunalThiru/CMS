@@ -9,6 +9,7 @@ import { UserCustomerComponent } from './user-customer/user-customer';
 import { RoleGuard } from './guards/role-guard';
 import { ProfileComponent } from './profile/profile';
 import { CustomerComplaintsListComponent } from './customer-complaints-list/customer-complaints-list';
+import { HistoryComponent } from './history/history';
 
 
 export const routes: Routes = [
@@ -20,7 +21,9 @@ export const routes: Routes = [
   { path: 'customer', component: UserCustomerComponent, canActivate: [RoleGuard], data: { role: 'customer' } },
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'customer/complaints', component: CustomerComplaintsListComponent },
-  
+  { path: 'history', component: HistoryComponent },
+
+
   { path: '**', redirectTo: '' }
   
 

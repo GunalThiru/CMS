@@ -35,9 +35,17 @@ export class ComplaintService {
     return this.http.delete(`${this.apiUrl}/${complaintId}`);
   }
 
-  // services/complaint.ts
-closeComplaint(id: number) {
-  return this.http.put(`${this.apiUrl}/complaints/close/${id}`, {});
+
+// services/complaint.ts (add)
+closeComplaint(complaintId: number) {
+  return this.http.put(`${this.apiUrl}/close/${complaintId}`, {});
 }
+//history.ts (add)
+getClosedComplaints(userId: number) {
+  return this.http.get<Complaint[]>(`${this.apiUrl}/${userId}`);
+}
+
+
+
 
 }

@@ -1,0 +1,125 @@
+/* --- Complaints Table --- */
+.complaints-list {
+  width: 95%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.complaints-list h2 {
+  color: #4b3cbf;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.complaints-table {
+  width: 80%;
+  border-collapse: collapse;
+}
+
+.complaints-table th,
+.complaints-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.complaints-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+
+.complaints-table td {
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.complaints-table tr:hover {
+  background-color: #fafafa;
+}
+
+/* Inline edit input inside table */
+.complaints-table input {
+  width: 80%;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+/* Prevent table from stretching too wide */
+.complaints-table {
+  width: 100%;
+  table-layout: fixed; /* Ensures columns obey max-widths */
+}
+
+/* Description column — wraps text nicely instead of extending horizontally */
+.complaints-table td:nth-child(3),
+.complaints-table th:nth-child(3) {
+  max-width: 300px; /* Limit width of description column */
+  white-space: normal; /* Allow wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: justify;
+}
+
+/* Ensure the entire table is scrollable horizontally if content overflows */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Optional: textarea (when editing) */
+.complaints-table textarea {
+  width: 100%;
+  max-width: 280px;
+  min-height: 60px;
+  resize: vertical;
+  word-wrap: break-word;
+}
+
+.complaints-table input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 4px rgba(102, 126, 234, 0.3);
+}
+
+.complaints-table textarea {
+  width: 100%;
+  max-width: 280px;
+  min-height: 60px;
+  resize: vertical;
+  word-wrap: break-word;
+}
+
+/* Action buttons inside table */
+.table-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-right: 0.3rem;
+  transition: all 0.2s ease;
+}
+
+.table-btn:hover:enabled {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
+}
+
+.table-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .complaints-table th,
+  .complaints-table td {
+    padding: 8px 5px;
+    font-size: 0.85rem;
+  }
+}

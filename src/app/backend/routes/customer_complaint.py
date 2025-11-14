@@ -2,6 +2,7 @@
 from flask import Blueprint, request, jsonify
 from extensions import db
 from models import Complaint
+from datetime import datetime, timezone
 
 customer_bp = Blueprint('customer', __name__)
 
@@ -20,7 +21,14 @@ def submit_complaint():
 
 @customer_bp.route('/complaints/<int:user_id>', methods=['GET'])
 def get_complaints(user_id):
-    complaints = Complaint.query.filter_by(user_id=user_id).all()
+    status = request.args.get('status')
+
+    query = Complaint.query.filter_by(user_id=user_id)
+
+    if status:
+        query = query.filter_by(status=status)
+
+    complaints = query.all()
     return jsonify([c.to_dict() for c in complaints])
 
 @customer_bp.route('/complaints/<int:complaint_id>', methods=['PUT'])
@@ -55,5 +63,6 @@ def close_complaint(complaint_id):
         return jsonify({'error': 'Only resolved complaints can be closed'}), 400
 
     complaint.status = 'closed'
+    complaint.close_date = datetime.now(timezone.utc)
     db.session.commit()
     return jsonify({'message': 'Complaint closed successfully', 'complaint': complaint.to_dict()}), 200

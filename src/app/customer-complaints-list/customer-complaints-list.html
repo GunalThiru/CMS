@@ -48,13 +48,27 @@
 
           <!-- Resolved complaints: show close option -->
           <ng-template #resolvedActions>
-            <button
-              *ngIf="complaint.status === 'resolved'"
-              class="table-btn close-btn"
-              (click)="closeComplaint(complaint)"
-            >
-              Close Complaint
-            </button>
+            <!-- ...inside your row actions where you show Close Complaint... -->
+<button
+  *ngIf="complaint.status === 'resolved'"
+  class="table-btn close-btn"
+  (click)="openCloseModal(complaint)"
+>
+  Close Complaint
+</button>
+
+<!-- Modal (place once, e.g. at bottom of template) -->
+<div class="modal-backdrop" *ngIf="showCloseModal">
+  <div class="modal">
+    <h3>Close Complaint</h3>
+    <p>Do you want to close complaint #{{ modalComplaint?.id }} titled "<em>{{ modalComplaint?.title }}</em>"?</p>
+    <div class="modal-actions">
+      <button class="table-btn" (click)="confirmClose()">Yes, Close</button>
+      <button class="table-btn" (click)="cancelClose()">Cancel</button>
+    </div>
+  </div>
+</div>
+
             <span *ngIf="complaint.status === 'closed'" class="closed-text">Closed</span>
           </ng-template>
         </td>
@@ -63,25 +77,4 @@
   </table>
 </section>
 
-<!-- History Section -->
-<section *ngIf="historyComplaints.length > 0" class="complaints-history">
-  <h2>Closed Complaints (History)</h2>
-  <table class="complaints-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let complaint of historyComplaints">
-        <td>{{ complaint.id }}</td>
-        <td>{{ complaint.title }}</td>
-        <td>{{ complaint.description }}</td>
-        <td class="status-closed">Closed</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+

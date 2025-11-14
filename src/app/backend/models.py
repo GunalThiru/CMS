@@ -34,21 +34,23 @@ class User(db.Model):
 # -------------------------
 # Complaint model
 # -------------------------
+
 class Complaint(db.Model):
     __tablename__ = 'complaints'
-   
+    """Model representing a customer complaint."""
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(50), default='Pending')
+    status = db.Column(db.String(50), default='open')  # open, in_progress, resolved, closed
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    close_date = db.Column(db.DateTime, nullable=True)  # new: when complaint was closed
 
     assignments = db.relationship('ComplaintAssignment', backref='complaints', lazy=True)
 
     def to_dict(self):
-        """Convert the complaint object to a dictionary."""
+
         return {
             'id': self.id,
             'user_id': self.user_id,
@@ -56,10 +58,10 @@ class Complaint(db.Model):
             'description': self.description,
             'status': self.status,
             'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'close_date': self.close_date.isoformat() if self.close_date else None
         }
-
-
+    
 # -------------------------
 # Complaint Assignment model
 # -------------------------
