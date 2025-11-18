@@ -5,6 +5,7 @@ from routes import register_routes
 from routes.customer_complaint import customer_bp
 from routes.admin_complaint import admin_bp   # ✅ add this import
 from routes.staff_complaint import staff_bp   # ✅ (you’ll create this soon)
+from routes.admin_users import admin_users_bp  # ✅ add this import
 
 def create_app():
     """
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(customer_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(staff_bp)
+    app.register_blueprint(admin_users_bp)
 
     # ✅ Health check route (optional)
     @app.route('/')

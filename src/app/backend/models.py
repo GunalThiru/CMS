@@ -50,17 +50,28 @@ class Complaint(db.Model):
     assignments = db.relationship('ComplaintAssignment', backref='complaints', lazy=True)
 
     def to_dict(self):
+    # Get the latest assignment for this complaint
+        latest_assignment = None
+        if self.assignments:
+            latest_assignment = sorted(
+            self.assignments, key=lambda x: x.updated_at, reverse=True
+        )[0]
 
         return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'title': self.title,
-            'description': self.description,
-            'status': self.status,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
-            'close_date': self.close_date.isoformat() if self.close_date else None
-        }
+        'id': self.id,
+        'user_id': self.user_id,
+        'title': self.title,
+        'description': self.description,
+        'status': self.status,
+        'created_at': self.created_at.isoformat() if self.created_at else None,
+        'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+        'close_date': self.close_date.isoformat() if self.close_date else None,
+
+        # added fields
+        'assigned_staff_id': latest_assignment.assigned_to if latest_assignment else None,
+        'remarks': latest_assignment.remarks if latest_assignment else None
+    }
+
     
 # -------------------------
 # Complaint Assignment model

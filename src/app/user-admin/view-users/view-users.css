@@ -1,0 +1,73 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  padding: 8px 16px;
+  border: none;
+  background: #ddd;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tabs .active {
+  background: #007bff;
+  color: white;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;       /* FIXED alignment */
+  vertical-align: middle;   /* keeps content centered vertically */
+}
+
+.load-more {
+  display: block;
+  margin: 15px auto;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.load-more:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.no-data {
+  text-align: center;
+  color: #777;
+  margin: 20px 0;
+}

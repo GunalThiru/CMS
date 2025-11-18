@@ -1,0 +1,99 @@
+<div class="container">
+
+  <h2>Admin Users</h2>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button 
+      [class.active]="activeTab === 'staff'"
+      (click)="switchTab('staff')">
+      Staff
+    </button>
+    <button 
+      [class.active]="activeTab === 'customers'"
+      (click)="switchTab('customers')">
+      Customers
+    </button>
+  </div>
+
+  <!-- Search Box -->
+  <div class="search-box">
+    <input type="text" placeholder="Search..." [(ngModel)]="q">
+    <button (click)="onSearch()">Search</button>
+  </div>
+
+  <!-- STAFF TABLE -->
+  <table *ngIf="activeTab === 'staff'">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Total Assigned</th>
+        <th>Resolved</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let s of staff">
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+
+        <!-- FIXED: s.count → s.assigned -->
+        <td>{{ s.assigned }}</td>
+
+        <!-- FIXED: resolved is correct -->
+        <td>{{ s.resolved }}</td>
+      </tr>
+
+      <tr *ngIf="staff.length === 0">
+        <td colspan="4" class="no-data">No Staff Found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CUSTOMERS TABLE -->
+  <table *ngIf="activeTab === 'customers'">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Total Complaints</th>
+        <th>Resolved</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let c of customers">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+
+        <!-- FIXED: c.count → c.total -->
+        <td>{{ c.total }}</td>
+
+        <td>{{ c.resolved }}</td>
+      </tr>
+
+      <tr *ngIf="customers.length === 0">
+        <td colspan="4" class="no-data">No Customers Found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- LOAD MORE BUTTON -->
+  <button 
+    class="load-more"
+    *ngIf="activeTab === 'staff'"
+    (click)="loadMoreStaff()"
+    [disabled]="page >= totalPages">
+    Load More
+  </button>
+
+  <button 
+    class="load-more"
+    *ngIf="activeTab === 'customers'"
+    (click)="loadMoreCustomers()"
+    [disabled]="page >= totalPages">
+    Load More
+  </button>
+
+</div>

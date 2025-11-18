@@ -4,16 +4,18 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 64px; /* 🔥 Fixed consistent height */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 0 30px; /* Perfect horizontal spacing */
   background: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   box-sizing: border-box;
 }
 
+/* Logo */
 .navbar .logo a {
   font-size: 1.5rem;
   font-weight: bold;
@@ -21,28 +23,34 @@
   text-decoration: none;
 }
 
+/* Navigation links */
 .navbar .nav-container {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 22px; /* Equal spacing */
 }
 
 .navbar .nav-container a {
   color: #5563DE;
   text-decoration: none;
   font-weight: 600;
+  padding: 4px 0; /* Align baseline */
   transition: 0.3s;
 }
 
+/* Hover effect */
 .navbar .nav-container a:hover {
   color: #3848b1;
 }
 
+/* Active link underline */
 .navbar .nav-container .active {
   border-bottom: 2px solid #5563DE;
-  padding-bottom: 4px;
 }
 
+/* ===== MAIN CONTENT BELOW NAVBAR ===== */
 .content {
-  margin-top: 60px; /* same as navbar height */
+  margin-top: 70px !important; /* 🔥 Always below navbar */
   padding: 20px;
+  box-sizing: border-box;
 }

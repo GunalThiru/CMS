@@ -23,14 +23,40 @@
         <td class="wrap-text">{{ c.description }}</td>
         <td>{{ c.status }}</td>
 
-        <td><input type="number" [(ngModel)]="c.staff_id" placeholder="Staff ID" /></td>
-        <td><input type="text" [(ngModel)]="c.remarks" placeholder="Remarks" /></td>
+       <!-- Staff ID -->
+<td>
+  <!-- Show input only if complaint is open -->
+  <ng-container *ngIf="c.status === 'open'; else showAssignedStaff">
+    <input type="number" [(ngModel)]="c.staff_id" placeholder="Staff ID" />
+  </ng-container>
 
-        <td>
-          <button class="assign-btn" (click)="assignComplaint(c)" [disabled]="c.status !== 'open'">
-            Assign
-          </button>
-        </td>
+  <!-- After assignment -->
+  <ng-template #showAssignedStaff>
+    <span><strong>{{ c.staff_id || c.assigned_staff_id }}</strong></span>
+  </ng-template>
+</td>
+
+<!-- Remarks -->
+<td>
+  <ng-container *ngIf="c.status === 'open'; else showRemarks">
+    <input type="text" [(ngModel)]="c.remarks" placeholder="Remarks" />
+  </ng-container>
+
+  <ng-template #showRemarks>
+    <span>{{ c.remarks }}</span>
+  </ng-template>
+</td>
+
+<!-- Action Button -->
+<td>
+  <button 
+    class="assign-btn"
+    (click)="assignComplaint(c)"
+    [disabled]="c.status !== 'open'">
+    {{ c.status === 'open' ? 'Assign' : 'Assigned' }}
+  </button>
+</td>
+
       </tr>
     </tbody>
   </table>

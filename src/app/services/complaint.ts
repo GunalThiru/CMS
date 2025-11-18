@@ -42,7 +42,7 @@ closeComplaint(complaintId: number) {
 }
 //history.ts (add)
 getClosedComplaints(userId: number) {
-  return this.http.get<Complaint[]>(`${this.apiUrl}/${userId}`);
+  return this.http.get<Complaint[]>(`${this.apiUrl}/${userId}?mode=history`);
 }
 
 

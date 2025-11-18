@@ -10,6 +10,7 @@ import { RoleGuard } from './guards/role-guard';
 import { ProfileComponent } from './profile/profile';
 import { CustomerComplaintsListComponent } from './customer-complaints-list/customer-complaints-list';
 import { HistoryComponent } from './history/history';
+import { AdminUsersComponent } from './user-admin/view-users/view-users';
 
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'customer/complaints', component: CustomerComplaintsListComponent },
   { path: 'history', component: HistoryComponent },
+  {path: 'admin/view-users', component: AdminUsersComponent, canActivate: [RoleGuard], data: { role: 'admin' } },
 
 
   { path: '**', redirectTo: '' }
