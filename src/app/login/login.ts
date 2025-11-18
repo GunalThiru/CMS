@@ -33,7 +33,9 @@ onLogin() {
       console.log('Login response:', user);
 
       // 🔹 Set reactive user
-      this.loginAuthService.setCurrentUser(user);
+        // ❌ REMOVE THIS — causes early SSR write
+      // this.loginAuthService.setCurrentUser(user);
+     // this.loginAuthService.setCurrentUser(user);
 
       // Redirect based on role
       if (user.role === 'admin') this.router.navigate(['/admin']);

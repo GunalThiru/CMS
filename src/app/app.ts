@@ -20,6 +20,12 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+
+    // 🔥 Restore user before subscribing
+    this.loginAuthService.loadUserFromSession();
+
+
     this.loginAuthService.currentUser$.subscribe((user: User | null) => {
       this.userRole = user?.role || null;
       this.userId = user?.id || null;

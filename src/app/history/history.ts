@@ -1,8 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../services/complaint';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
-import { PLATFORM_ID } from '@angular/core';
+import { LoginAuthService } from '../services/login-auth';
 
 @Component({
   selector: 'app-history',
@@ -17,26 +17,34 @@ export class HistoryComponent implements OnInit {
 
   constructor(
     private complaintService: ComplaintService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private auth: LoginAuthService
   ) {}
 
   ngOnInit() {
 
-    // ✔ Only use localStorage in browser
-    if (isPlatformBrowser(this.platformId)) {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        this.userId = JSON.parse(userData).id;
-      }
-    }
 
-    this.loadClosedComplaints();
+    // 🔥 Load user immediately from sessionStorage (SSR FIX)
+    this.auth.loadUserFromSession();
+
+    
+    // 🔥 Subscribe so user loads even after SSR delay
+    this.auth.currentUser$.subscribe(user => {
+      if (!user) {
+        console.warn("⛔ User not loaded yet...");
+        return; // Wait until user is available
+      }
+
+      this.userId = user.id;
+      this.loadClosedComplaints();
+    });
   }
 
   loadClosedComplaints() {
+    if (!this.userId) return;
+
     this.complaintService.getClosedComplaints(this.userId).subscribe({
       next: (data) => {
-        this.closedComplaints = data.filter((c: any) => c.status === 'closed');
+        this.closedComplaints = data;
       },
       error: () => {
         console.error('Failed to load closed complaints');
