@@ -20,20 +20,6 @@ def get_all_complaints():
 # ----------------------------
 @admin_bp.route('/admin/assign', methods=['POST'])
 def assign_complaint():
-    """Assign a complaint to a staff member.
-
-    Expected JSON payload:
-    {
-        "complaint_id": <int>,
-        "staff_id": <int>,
-        "remarks": <str> (optional)
-    }
-
-    Returns:
-        200: Success message on successful assignment.
-        400: Invalid staff ID.
-        404: Complaint not found.
-    """
     data = request.json
     complaint_id = data.get('complaint_id')
     staff_id = data.get('staff_id')
@@ -49,10 +35,15 @@ def assign_complaint():
     if not complaint:
         return jsonify({'error': 'Complaint not found'}), 404
 
-    # Create complaint assignment entry
+    # 🔥 Auto-select an admin (temporarily)  
+    admin_user = User.query.filter(User.role.in_(["admin", "sub_admin"])).first()
+    assigned_by = admin_user.uid if admin_user else 1  # fallback to 1
+
+    # Create assignment entry
     assignment = ComplaintAssignment(
         complaint_id=complaint_id,
         assigned_to=staff_id,
+        assigned_by=assigned_by,   # 👈 NEW FIELD
         remarks=remarks
     )
 

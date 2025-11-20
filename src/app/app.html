@@ -7,8 +7,8 @@
   </div>
 </nav>
 
-<!-- Admin Navbar -->
-<nav class="navbar" *ngIf="userRole === 'admin'">
+<!-- Admin + Sub Admin Navbar -->
+<nav class="navbar" *ngIf="userRole === 'admin' || userRole === 'sub_admin'">
   <div class="logo"><a routerLink="/admin">Admin Panel</a></div>
   <div class="nav-container">
     <a [routerLink]="['/profile', userId]">Profile</a>
@@ -42,3 +42,4 @@
 <main class="content">
   <router-outlet></router-outlet>
 </main>
+<!-- Footer -->

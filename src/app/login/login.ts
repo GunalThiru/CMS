@@ -39,6 +39,8 @@ onLogin() {
 
       // Redirect based on role
       if (user.role === 'admin') this.router.navigate(['/admin']);
+      else if (user.role === 'sub_admin') this.router.navigate(['/admin']);   // route for admin and subadmin is same
+
       else if (user.role === 'staff') this.router.navigate(['/staff']);
       else this.router.navigate(['/customer']);
     },

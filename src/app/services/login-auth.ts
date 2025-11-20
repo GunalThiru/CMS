@@ -12,7 +12,9 @@ export interface User {
   phone: string;
   dob: string;
   age: number;
-  role: 'admin' | 'staff' | 'customer';
+  role: 'admin' | 'sub_admin' | 'staff' | 'customer';
+  is_online: boolean;
+  last_seen: string;
 }
 
 @Injectable({ providedIn: 'root' })

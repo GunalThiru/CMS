@@ -20,6 +20,8 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(20), nullable=False, default='customer')
+    is_online = db.Column(db.Boolean, default=False)
+    last_seen = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     # Relationships
     complaints = db.relationship('Complaint', backref='user', lazy=True)
@@ -85,6 +87,7 @@ class ComplaintAssignment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.id'), nullable=False)
     assigned_to = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
+    assigned_by = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
     remarks = db.Column(db.String(500))
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
@@ -94,6 +97,7 @@ class ComplaintAssignment(db.Model):
             'id': self.id,
             'complaint_id': self.complaint_id,
             'assigned_to': self.assigned_to,
+            'assigned_by': self.assigned_by,
             'remarks': self.remarks,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
