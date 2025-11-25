@@ -1,10 +1,8 @@
 <div class="staff-container">
   <h2>Assigned Complaints</h2>
 
-  <!-- Loading indicator -->
   <div *ngIf="loading" class="loading">Loading complaints...</div>
 
-  <!-- Complaints Table -->
   <table *ngIf="!loading && complaints.length > 0" class="complaints-table">
     <thead>
       <tr>
@@ -20,33 +18,38 @@
 
     <tbody>
       <tr *ngFor="let c of complaints; trackBy: trackByComplaintId">
+
         <td>{{ c.id }}</td>
         <td>{{ c.user_id }}</td>
         <td>{{ c.title }}</td>
         <td class="wrap-text">{{ c.description }}</td>
+
+        <!-- STATUS SELECT (Disabled ONLY if original status was resolved) -->
         <td>
-          <select [(ngModel)]="c.status">
+          <select [(ngModel)]="c.status" [disabled]="c.originalStatus === 'resolved'">
             <option value="in_progress">In Progress</option>
             <option value="resolved">Resolved</option>
           </select>
         </td>
-        <td>
-          <input
-            type="text"
-            [(ngModel)]="c.remarks"
-            placeholder="Enter remarks"
-          />
+
+        <!-- REMARKS (Never editable for staff) -->
+        <td class="wrap-text">
+          {{ c.remarks || '—' }}
         </td>
+
+        <!-- UPDATE BUTTON (Disabled ONLY if already resolved in DB) -->
         <td>
-          <button class="update-btn" (click)="updateComplaint(c)">
+          <button class="update-btn"
+                  (click)="attemptUpdate(c)"
+                  [disabled]="c.originalStatus === 'resolved'">
             Update
           </button>
         </td>
+
       </tr>
     </tbody>
   </table>
 
-  <!-- No complaints -->
   <div *ngIf="!loading && complaints.length === 0" class="no-data">
     No complaints assigned yet.
   </div>

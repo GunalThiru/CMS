@@ -362,3 +362,77 @@ button:disabled {
   background: #aaa;
   cursor: not-allowed;
 }
+
+/* ----------------------------------------------------
+   FINAL FIX — Prevent table width overflow permanently
+----------------------------------------------------- */
+
+/* Make table obey fixed widths */
+.complaints-table {
+  width: 100%;
+  table-layout: fixed; /* Ensures no column can stretch */
+}
+
+/* Column 1 - Title */
+.complaints-table th:nth-child(1),
+.complaints-table td:nth-child(1) {
+  max-width: 180px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Column 2 - Category or User (if exists) */
+.complaints-table th:nth-child(2),
+.complaints-table td:nth-child(2) {
+  max-width: 150px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Column 3 – Description */
+.complaints-table th:nth-child(3),
+.complaints-table td:nth-child(3) {
+  max-width: 300px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: justify;
+}
+
+/* Column 4 – Status */
+.complaints-table th:nth-child(4),
+.complaints-table td:nth-child(4) {
+  max-width: 120px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Column 5 – Actions */
+.complaints-table th:nth-child(5),
+.complaints-table td:nth-child(5) {
+  max-width: 150px;
+  white-space: nowrap; /* Buttons stay on same line */
+}
+
+/* Textarea for inline editing */
+.complaints-table textarea {
+  width: 100%;
+  max-width: 280px !important;
+  min-height: 60px;
+  resize: vertical;
+  overflow-wrap: break-word;
+}
+
+/* Wrap table in scroll container (prevents screen overflow) */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+.no-complaints {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #555;
+  background: #f8f8f8;
+  border-radius: 8px;
+  margin-top: 10px;
+}

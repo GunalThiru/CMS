@@ -1,48 +1,82 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'staff' | 'customer';
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:5000';  // Flask server URL
+  private baseUrl = 'http://localhost:5000';
 
-  // 🔹 Role state for reactive navbar
-  private roleSubject = new BehaviorSubject<string | null>(null);
-  role$ = this.roleSubject.asObservable();
+  // ---- USER STATE ----
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    // Load role from localStorage if present
-    if (typeof localStorage !== 'undefined') {
-      const savedRole = localStorage.getItem('role');
-      this.roleSubject.next(savedRole);
+    this.loadUserFromStorage();
+  }
+
+  // ---------------------------------------------------------
+  // LOAD USER ON REFRESH
+  // ---------------------------------------------------------
+  loadUserFromStorage() {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      this.currentUserSubject.next(JSON.parse(userJson));
     }
   }
 
-  // ===================== HTTP Methods =====================
-  signup(userData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/signup`, userData);
+  // ---------------------------------------------------------
+  // SIGNUP
+  // ---------------------------------------------------------
+  signup(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/signup`, data);
   }
 
-  login(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, data);
+  // ---------------------------------------------------------
+  // LOGIN
+  // ---------------------------------------------------------
+  login(data: any): Observable<User> {
+    return this.http.post<User>(`${this.baseUrl}/auth/login`, data).pipe(
+      tap((user) => {
+        // store user in localStorage
+        localStorage.setItem('user', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+      })
+    );
+  }
+
+  // ---------------------------------------------------------
+  // LOGOUT
+  // ---------------------------------------------------------
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSubject.next(null);
+  }
+
+  // ---------------------------------------------------------
+  // GET USER INFO
+  // ---------------------------------------------------------
+  getUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  getRole(): string | null {
+    return this.currentUserSubject.value?.role || null;
+  }
+
+  getUserId(): number | null {
+    return this.currentUserSubject.value?.id || null;
   }
 
   getUsers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/users`);
-  }
-
-  // ===================== Role Methods =====================
-  setRole(role: string | null) {
-    if (typeof localStorage !== 'undefined') {
-      if (role) localStorage.setItem('role', role);
-      else localStorage.removeItem('role');
-    }
-    this.roleSubject.next(role);
-  }
-
-  getRole(): string | null {
-    return this.roleSubject.value;
   }
 }

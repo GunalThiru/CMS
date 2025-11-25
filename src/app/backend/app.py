@@ -1,23 +1,23 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from config import DevelopmentConfig
 from extensions import db, cors
 from routes import register_routes
 from routes.customer_complaint import customer_bp
-from routes.admin_complaint import admin_bp   # ✅ add this import
-from routes.staff_complaint import staff_bp   # ✅ (you’ll create this soon)
-from routes.admin_users import admin_users_bp  # ✅ add this import
+from routes.admin_complaint import admin_bp
+from routes.staff_complaint import staff_bp
+from routes.admin_users import admin_users_bp
 
 def create_app():
     """
     Factory function to create and configure the Flask app.
     Keeps things modular and testable.
     """
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='dist/cms/browser')
 
-    # ✅ Load configuration (DB URL, etc.)
+    # Load config
     app.config.from_object(DevelopmentConfig)
 
-    # ✅ Initialize extensions
+    # Init extensions
     db.init_app(app)
     cors.init_app(
         app,
@@ -25,19 +25,30 @@ def create_app():
         supports_credentials=True
     )
 
-    # ✅ Register all route blueprints
+    # Register blueprints (API routes)
     register_routes(app)
     app.register_blueprint(customer_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(staff_bp)
     app.register_blueprint(admin_users_bp)
 
-    # ✅ Health check route (optional)
-    @app.route('/')
+    # Health check (optional)
+    @app.route('/api/health')
     def health():
         return jsonify({"status": "ok", "message": "Flask backend running"}), 200
 
-    # ✅ Global error handler
+    # 🟢 CATCH-ALL ROUTE FOR ANGULAR SPA (IMPORTANT!)
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_angular(path):
+        # If file exists in Angular dist, serve it
+        try:
+            return send_from_directory(app.static_folder, path)
+        except:
+            # Otherwise return index.html (SPA fallback)
+            return send_from_directory(app.static_folder, 'index.html')
+
+    # Error handler
     @app.errorhandler(500)
     def handle_500_error(e):
         response = jsonify({'message': 'Internal Server Error', 'error': str(e)})
