@@ -29,8 +29,6 @@ export class UserStaffComponent implements OnInit {
     const user = JSON.parse(stored);
     this.staffId = user.id;
 
-    console.log("Logged-in staff ID =", this.staffId);
-
     this.loadComplaints();
   }
 
@@ -39,7 +37,14 @@ export class UserStaffComponent implements OnInit {
 
     this.staffService.getAssignedComplaints(this.staffId).subscribe({
       next: (res: any[]) => {
-        this.complaints = res.map(c => ({ ...c, remarks: c.remarks || '' }));
+
+        /** 🔥 IMPORTANT FIX — store original DB status */
+        this.complaints = res.map(c => ({
+          ...c,
+          originalStatus: c.status,   // store DB state for disabling controls
+          remarks: c.remarks || ''
+        }));
+
         this.loading = false;
       },
       error: err => {
@@ -49,19 +54,36 @@ export class UserStaffComponent implements OnInit {
     });
   }
 
+  attemptUpdate(c: any): void {
+
+    if (c.status === 'resolved') {
+      const ok = confirm(
+        "Are you sure you want to mark this complaint as RESOLVED?\n\n" +
+        "You CANNOT edit it again after this."
+      );
+      if (!ok) return;
+    }
+
+    this.updateComplaint(c);
+  }
+
   updateComplaint(c: any): void {
+
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 
     const data = {
       complaint_id: c.id,
       remarks: c.remarks,
       status: c.status,
-      staff_id: user.id  // ✅ REQUIRED
+      staff_id: user.id
     };
 
     this.staffService.updateComplaint(data).subscribe({
       next: () => {
+
         alert("Complaint updated successfully!");
+
+        /** 🔥 REFRESH DATA so row becomes locked */
         this.loadComplaints();
       },
       error: err => console.error("❌ Error updating complaint:", err)

@@ -1,45 +1,158 @@
+/* --- Admin Container --- */
 .admin-container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 2rem auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h2 {
+/* Title */
+.admin-container h2 {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.4rem;
+  color: #4b3cbf;
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
+/* --- Scrollable Table Container --- */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* --- Table Base --- */
 .complaints-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* IMPORTANT: Limit column expansion */
+  background: white;
 }
 
-.complaints-table th,
-.complaints-table td {
-  border-bottom: 1px solid #eee;
-  padding: 10px;
+/* Header Styling */
+.complaints-table th {
+  background: #f5f5f7;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
   text-align: left;
+}
+
+/* Cell Styling */
+.complaints-table td {
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  border-bottom: 1px solid #eee;
   vertical-align: top;
+  color: #444;
 }
 
-.wrap-text {
+/* --- Column Width Control --- */
+.complaints-table th:nth-child(1),
+.complaints-table td:nth-child(1) {
+  width: 60px; /* ID */
+}
+
+.complaints-table th:nth-child(2),
+.complaints-table td:nth-child(2) {
+  width: 80px; /* User ID */
+}
+
+.complaints-table th:nth-child(3),
+.complaints-table td:nth-child(3) {
+  max-width: 150px; /* Title */
   white-space: normal;
-  word-break: break-word;
+  word-wrap: break-word;
 }
 
+.complaints-table th:nth-child(4),
+.complaints-table td:nth-child(4) {
+  max-width: 250px; /* Description */
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: justify;
+}
+
+.complaints-table th:nth-child(5),
+.complaints-table td:nth-child(5) {
+  width: 120px; /* Status */
+}
+
+.complaints-table th:nth-child(6),
+.complaints-table td:nth-child(6) {
+  width: 140px; /* Staff ID input */
+}
+
+.complaints-table th:nth-child(7),
+.complaints-table td:nth-child(7) {
+  max-width: 180px; /* Remarks */
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.complaints-table th:nth-child(8),
+.complaints-table td:nth-child(8) {
+  width: 110px; /* Action button */
+}
+
+/* --- Inputs in Table --- */
+.complaints-table input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.complaints-table input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 4px rgba(102, 126, 234, 0.3);
+}
+
+/* --- Assign Button --- */
 .assign-btn {
-  background: #007bff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.assign-btn:hover:enabled {
+  transform: scale(1.04);
+  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
 }
 
 .assign-btn:disabled {
-  background: #ccc;
+  background: #bbb;
   cursor: not-allowed;
 }
+
+/* Hover Row Highlight */
+.complaints-table tr:hover {
+  background-color: #fafafa;
+}
+
+/* Responsive Breakpoint */
+@media (max-width: 768px) {
+  .complaints-table th,
+  .complaints-table td {
+    font-size: 0.82rem;
+    padding: 8px;
+  }
+
+  .assign-btn {
+    padding: 5px 10px;
+  }
+}
+/* --- Input and Textarea Styling --- */

@@ -2,7 +2,13 @@
 <section class="complaints-list">
   <h2>Your Complaints</h2>
 
-  <table class="complaints-table">
+  <!-- If NO complaints -->
+  <div *ngIf="openComplaints.length === 0" class="no-complaints">
+    You have not raised any complaints yet.
+  </div>
+
+  <!-- If complaints exist -->
+  <table *ngIf="openComplaints.length > 0" class="complaints-table">
     <thead>
       <tr>
         <th>ID</th>
@@ -17,16 +23,19 @@
       <tr *ngFor="let complaint of openComplaints">
         <td>{{ complaint.id }}</td>
 
+        <!-- Title -->
         <td *ngIf="!complaint.editMode">{{ complaint.title }}</td>
         <td *ngIf="complaint.editMode">
           <input type="text" [(ngModel)]="complaint.editTitle" />
         </td>
 
+        <!-- Description -->
         <td *ngIf="!complaint.editMode">{{ complaint.description }}</td>
         <td *ngIf="complaint.editMode">
           <textarea [(ngModel)]="complaint.editDescription"></textarea>
         </td>
 
+        <!-- Status -->
         <td
           [ngClass]="{
             'status-open': complaint.status === 'open',
@@ -37,8 +46,10 @@
           {{ complaint.status }}
         </td>
 
+        <!-- Actions -->
         <td class="actions">
-          <!-- Regular edit/delete for open -->
+
+          <!-- OPEN STATUS ACTIONS -->
           <ng-container *ngIf="complaint.status === 'open'; else resolvedActions">
             <button *ngIf="!complaint.editMode" class="table-btn edit-btn" (click)="enableEdit(complaint)">Edit</button>
             <button *ngIf="complaint.editMode" class="table-btn save-btn" (click)="saveEdit(complaint)">Save</button>
@@ -46,28 +57,16 @@
             <button class="table-btn delete-btn" (click)="deleteComplaint(complaint.id!, complaint.status)">Delete</button>
           </ng-container>
 
-          <!-- Resolved complaints: show close option -->
+          <!-- RESOLVED / CLOSED ACTIONS -->
           <ng-template #resolvedActions>
-            <!-- ...inside your row actions where you show Close Complaint... -->
-<button
-  *ngIf="complaint.status === 'resolved'"
-  class="table-btn close-btn"
-  (click)="openCloseModal(complaint)"
->
-  Close Complaint
-</button>
 
-<!-- Modal (place once, e.g. at bottom of template) -->
-<div class="modal-backdrop" *ngIf="showCloseModal">
-  <div class="modal">
-    <h3>Close Complaint</h3>
-    <p>Do you want to close complaint #{{ modalComplaint?.id }} titled "<em>{{ modalComplaint?.title }}</em>"?</p>
-    <div class="modal-actions">
-      <button class="table-btn" (click)="confirmClose()">Yes, Close</button>
-      <button class="table-btn" (click)="cancelClose()">Cancel</button>
-    </div>
-  </div>
-</div>
+            <button
+              *ngIf="complaint.status === 'resolved'"
+              class="table-btn close-btn"
+              (click)="openCloseModal(complaint)"
+            >
+              Close Complaint
+            </button>
 
             <span *ngIf="complaint.status === 'closed'" class="closed-text">Closed</span>
           </ng-template>
@@ -75,6 +74,16 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Close Modal -->
+  <div class="modal-backdrop" *ngIf="showCloseModal">
+    <div class="modal">
+      <h3>Close Complaint</h3>
+      <p>Do you want to close complaint #{{ modalComplaint?.id }} titled "<em>{{ modalComplaint?.title }}</em>"?</p>
+      <div class="modal-actions">
+        <button class="table-btn" (click)="confirmClose()">Yes, Close</button>
+        <button class="table-btn" (click)="cancelClose()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </section>
-
-

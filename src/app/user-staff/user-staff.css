@@ -1,44 +1,89 @@
 .staff-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: #fff;
   padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
 }
 
+/* Page Title */
 h2 {
   margin-bottom: 15px;
+  text-align: center;
   color: #333;
 }
 
+/* Table Styling */
 .complaints-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .complaints-table th,
 .complaints-table td {
-  border: 1px solid #ddd;
-  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
   text-align: left;
+  vertical-align: top;
+  word-break: break-word;
 }
 
 .complaints-table th {
-  background: #f3f3f3;
+  background: #f8f8f8;
   font-weight: bold;
 }
 
-.wrap-text {
-  white-space: normal;
-  word-break: break-word;
+/* Highlight resolved row */
+.resolved-row {
+  background: #e9ffe9 !important;
+}
+
+/* Title Width */
+.complaints-table th:nth-child(3),
+.complaints-table td:nth-child(3) {
+  max-width: 150px;
+}
+
+/* Description Width */
+.complaints-table th:nth-child(4),
+.complaints-table td:nth-child(4) {
   max-width: 250px;
 }
 
+.wrap-text {
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Inputs */
+select,
+input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Disabled dropdown look */
+select:disabled {
+  background-color: #f1f1f1;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Buttons */
 .update-btn {
   background-color: #007bff;
   color: #fff;
   border: none;
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -46,8 +91,17 @@ h2 {
   background-color: #0056b3;
 }
 
+/* Disabled button */
+.update-btn:disabled {
+  background-color: #ccc !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+/* Messages */
 .loading,
 .no-data {
   margin-top: 20px;
+  text-align: center;
   color: #555;
 }
