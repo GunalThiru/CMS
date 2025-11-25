@@ -1,14 +1,11 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app';
-import { routes } from './app/app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-
+import { appConfig } from './app/app.config';
+import { provideHttpClient } from '@angular/common/http'; // ✅ add this
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(routes),
-    provideHttpClient(withFetch()),
-    
+    ...appConfig.providers,
+    provideHttpClient()  // ✅ provide HttpClient globally
   ]
 }).catch(err => console.error(err));

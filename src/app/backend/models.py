@@ -101,3 +101,28 @@ class ComplaintAssignment(db.Model):
             'remarks': self.remarks,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
+# -------------------------
+# Feedback model    
+
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+
+    id = db.Column(db.Integer, primary_key=True)
+    staff_id = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    staff = db.relationship("User", foreign_keys=[staff_id])
+    customer = db.relationship("User", foreign_keys=[customer_id])
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "staff_id": self.staff_id,
+            "customer_id": self.customer_id,
+            "rating": self.rating,
+            "description": self.description,
+            "created_at": self.created_at,
+        }
