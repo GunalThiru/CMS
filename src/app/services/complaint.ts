@@ -49,4 +49,6 @@ export class ComplaintService {
   getClosedComplaints(userId: number): Observable<Complaint[]> {
     return this.http.get<Complaint[]>(`${this.apiUrl}/${userId}?mode=history`);
   }
+
+ 
 }

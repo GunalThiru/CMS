@@ -1,140 +1,84 @@
-/* --- Page Layout --- */
-
-body{
-  background-color: white;
-}
+/* ---------- AUTH CONTAINER ---------- */
 .auth-container {
-  /* Full page container */
-
   display: flex;
-  justify-content: center;
+  justify-content: center; /* center the card horizontally */
   align-items: center;
-  min-height: 100vh;
-  padding: 80px 10px 20px; /* top padding to avoid fixed navbar */
-
-  background-color: white;
-  /* background: linear-gradient(135deg, #74ABE2, #5563DE); */
-  box-sizing: border-box;
+  min-height: 80vh; /* smaller height than full viewport */
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
 }
 
-
-
-
-
-/* --- Floating Animated Card --- */
+/* ---------- CARD ---------- */
 .card {
+  background: #fff;
+  padding: 2rem 2rem; /* padding inside card */
+  border-radius: 12px;
+  max-width: 380px; /* narrower than before */
   width: 100%;
-  max-width: 380px;
-  padding: 2.5rem 2rem;
-  border-radius: 20px;
-  background: #ffffffcc; /* semi-transparent for gradient effect */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  animation: float 4s ease-in-out infinite;
-  backdrop-filter: blur(6px);
-
-  /* --- Uniform Height --- */
-  height: 520px;        /* fixed height for both login/signup */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;   /* scroll if inputs exceed height */
-}
-
-/* --- Animations --- */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* --- Headings --- */
-h1 {
-  color: #4b3cbf;
-  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   text-align: center;
-  font-weight: 700;
-  font-size: 1.4rem;
 }
 
-/* --- Inputs --- */
+/* Header */
+.card h1 {
+  color: #4b3cbf;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+/* Input groups */
 .input-group {
   position: relative;
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .input-group input {
-  width: 100%;
-  padding-right: 30px; /* make room for the icon */
-}
-
-.error-icon {
-  position: absolute;
-  right: 10px; /* inside the input */
-  top: 35%;
-  transform: translateY(-50%);
-  color: red;
-  cursor: pointer;
-  animation: shake 0.4s ease-in-out, glow 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  50% { transform: translateX(2px); }
-  75% { transform: translateX(-1px); }
-}
-
-@keyframes glow {
-  from { text-shadow: 0 0 2px red; }
-  to { text-shadow: 0 0 6px red; }
-}
-
-
-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
+  width: 100%; /* ensure inputs span full width */
+  padding: 12px 14px;
   border-radius: 8px;
+  border: 1px solid #ccc;
   font-size: 0.95rem;
   outline: none;
+  box-sizing: border-box;
   transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.85);
 }
 
-input:focus {
+.input-group input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 6px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 0 6px rgba(102, 126, 234, 0.3);
 }
 
-/* --- Buttons --- */
-button {
-  width: 100%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 10px;
-  font-size: 0.95rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease;
+/* Error icon inside input */
+.error-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #f59e0b; /* amber */
+}
+
+/* Button */
+button[type="submit"] {
+  width: 100%; /* same width as inputs */
+  padding: 12px 0;
   margin-top: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-button:hover:enabled {
-  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
+button[type="submit"]:hover:enabled {
   transform: scale(1.03);
+  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
 }
 
 button:disabled {
@@ -142,64 +86,67 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* --- Messages --- */
-.success, .error {
-  text-align: center;
-  margin-bottom: 0.8rem;
-  font-size: 0.9rem;
-}
-
-.success { color: green; }
-.error { color: red; }
-
-/* --- Footer Links --- */
+/* Auth link */
 .auth-link {
-  margin-top: 0.8rem;
-  font-size: 0.85rem;
-  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #333;
 }
 
 .auth-link a {
   color: #4b3cbf;
-  text-decoration: none;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .auth-link a:hover {
   text-decoration: underline;
 }
-input {
-  width: 100%;
-  padding: 10px 35px 10px 10px; /* extra right padding for error icon */
-  margin-bottom: 0.8rem;
-  border: 1px solid #ccc;
+
+/* Success & Error messages */
+.success, .error {
+  margin-bottom: 1rem;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
-  position: relative;
-  box-sizing: border-box;
+  font-weight: 600;
+  text-align: center;
 }
 
-.input-wrapper {
-  position: relative; /* wrap input + error icon */
+/* Error red */
+.error {
+  background: #f87171;
+  color: #fff;
 }
 
-
-
-.error-tooltip {
-  position: absolute;
-  top: -25px;
-  right: 0;
-  background: #fff;
-  color: red;
-  font-size: 0.8rem;
-  padding: 10px 6px;
-  border: 1px solid red;
-  border-radius: 4px;
-  white-space: nowrap;
-  display: none;
+/* Success green */
+.success {
+  background: #38a169;
+  color: #fff;
+}
+/* ---------- ALERT MESSAGES WITH SLIDE & FADE ---------- */
+.success,
+.error {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 250px;
+  max-width: 400px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: slideFade 3s forwards;
+  cursor: pointer;
 }
 
-.error-icon:hover + .error-tooltip {
-  display: block;
+/* Slide down and fade animation */
+@keyframes slideFade {
+  0%   { opacity: 0; transform: translate(-50%, -20px); }
+  10%  { opacity: 1; transform: translate(-50%, 0); }
+  80%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
 }

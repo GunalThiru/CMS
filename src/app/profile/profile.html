@@ -1,36 +1,45 @@
-<div class="profile-container" *ngIf="user; else loading">
+<!-- profile.component.html -->
+<div class="profile-container card" *ngIf="user; else loading">
   <h2>{{ user.name }}'s Profile</h2>
 
-  <!-- Name -->
-  <label>Name:</label>
-  <input [(ngModel)]="user.name" [readonly]="!editMode" />
+  <!-- Success / Error messages -->
+  <div class="message success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-  <!-- Email (always readonly) -->
-  <label>Email:</label>
-  <input [(ngModel)]="user.email" readonly />
+  <!-- Profile Fields -->
+  <div class="input-group">
+    <label>Name:</label>
+    <input [(ngModel)]="user.name" [readonly]="!editMode" />
+  </div>
 
-  <!-- Phone -->
-  <label>Phone:</label>
-  <input [(ngModel)]="user.phone" [readonly]="!editMode" />
+  <div class="input-group">
+    <label>Email:</label>
+    <input [(ngModel)]="user.email" readonly />
+  </div>
 
-  <!-- DOB -->
-  <label>DOB:</label>
-  <input type="date" [(ngModel)]="user.dob" [readonly]="!editMode" />
+  <div class="input-group">
+    <label>Phone:</label>
+    <input [(ngModel)]="user.phone" [readonly]="!editMode" />
+  </div>
 
-  <!-- Age (readonly — auto-calculated usually) -->
-  <label>Age:</label>
-  <input [(ngModel)]="user.age" readonly />
+  <div class="input-group">
+    <label>DOB:</label>
+    <input type="date" [(ngModel)]="user.dob" [readonly]="!editMode" />
+  </div>
 
-  <!-- Role (readonly always) -->
-  <label>Role:</label>
-  <input [(ngModel)]="user.role" readonly />
+  <div class="input-group">
+    <label>Age:</label>
+    <input [(ngModel)]="user.age" readonly />
+  </div>
+
+  <div class="input-group">
+    <label>Role:</label>
+    <input [(ngModel)]="user.role" readonly />
+  </div>
 
   <!-- Buttons -->
   <div class="button-group" *ngIf="editable">
-    <!-- Show 'Edit' when not in edit mode -->
     <button *ngIf="!editMode" (click)="toggleEdit()">Edit</button>
-
-    <!-- Show 'Save' and 'Cancel' when editing -->
     <button *ngIf="editMode" (click)="saveProfile()">Save</button>
     <button *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
   </div>
@@ -38,7 +47,7 @@
 
 <!-- Loading Template -->
 <ng-template #loading>
-  <div class="profile-container loading">
+  <div class="profile-container card loading">
     Loading profile...
   </div>
 </ng-template>

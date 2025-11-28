@@ -14,9 +14,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  editable = false;           // tracks if user can *edit*
-  editMode = false;           // tracks if currently *editing*
-  originalUser: any = null;   // store backup before editing
+  editable = false;           
+  editMode = false;           
+  originalUser: any = null;   
+
+  // ✅ Messages
+  successMessage: string = '';
+  errorMessage: string = '';
 
   private loginService = inject(LoginAuthService);
   private http = inject(HttpClient);
@@ -28,24 +32,26 @@ export class ProfileComponent implements OnInit {
 
     this.http.get<User>(`http://localhost:5000/profile/${userId}`).subscribe({
       next: (data) => {
-        // Format DOB for date input
         if (data.dob) {
           const date = new Date(data.dob);
           data.dob = date.toISOString().split('T')[0];
         }
         this.user = data;
-
-        // Allow editing if same user or admin
         this.editable = loggedInUser?.id === userId || loggedInUser?.role === 'admin';
       },
-      error: (err) => console.error('Failed to load profile', err)
+      error: (err) => {
+        console.error('Failed to load profile', err);
+        this.errorMessage = 'Failed to load profile.';
+        this.autoClearMessage();
+      }
     });
   }
 
   toggleEdit(): void {
     if (!this.user) return;
     this.editMode = true;
-    this.originalUser = { ...this.user }; // keep a copy before editing
+    this.originalUser = { ...this.user };
+    this.clearMessages();
   }
 
   cancelEdit(): void {
@@ -53,6 +59,7 @@ export class ProfileComponent implements OnInit {
       this.user = { ...this.originalUser };
     }
     this.editMode = false;
+    this.clearMessages();
   }
 
   saveProfile(): void {
@@ -67,11 +74,28 @@ export class ProfileComponent implements OnInit {
     this.http.put(`http://localhost:5000/profile/${this.user.id}`, payload)
       .subscribe({
         next: (res: any) => {
-          alert('Profile updated successfully!');
-          this.user = res.user || this.user; // update local state
+          this.successMessage = 'Profile updated successfully!';
+          this.errorMessage = '';
+          this.user = res.user || this.user;
           this.editMode = false;
+          this.autoClearMessage();
         },
-        error: (err) => console.error('Update failed', err)
+        error: (err) => {
+          console.error('Update failed', err);
+          this.errorMessage = 'Failed to update profile.';
+          this.successMessage = '';
+          this.autoClearMessage();
+        }
       });
+  }
+
+  // ✅ Helpers
+  private autoClearMessage(timeout: number = 3000) {
+    setTimeout(() => this.clearMessages(), timeout);
+  }
+
+  private clearMessages() {
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 }

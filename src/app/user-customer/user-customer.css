@@ -1,77 +1,90 @@
+/* ---------- DASHBOARD CONTAINER ---------- */
 .dashboard-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center; /* center the card horizontally */
   align-items: center;
-  padding: 2rem 1rem;
+  min-height: 80vh; /* smaller than full viewport */
+  padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f6fa;
-  min-height: 100vh;
 }
 
-h1 {
+/* ---------- CARD ---------- */
+.card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 480px; /* slightly wider for form */
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Headers */
+.card h1 {
   color: #4b3cbf;
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
   font-weight: 700;
 }
 
-/* --- Form --- */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  width: 100%;
-  max-width: 600px;
+.card h2 {
+  color: #333;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
 }
 
-input, textarea {
+/* Input groups */
+.input-group {
+  position: relative;
+  margin-bottom: 1rem;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 12px 14px;
   border-radius: 8px;
+  border: 1px solid #ccc;
   font-size: 0.95rem;
   outline: none;
+  box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
-input:focus, textarea:focus {
+.input-group input:focus,
+.input-group textarea:focus {
   border-color: #667eea;
   box-shadow: 0 0 6px rgba(102, 126, 234, 0.3);
 }
 
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-/* --- Error / Success Messages --- */
+/* Error messages under inputs */
 .error-msg {
-  color: red;
+  color: #f87171; /* same red as auth */
   font-size: 0.85rem;
+  margin-top: 4px;
+  text-align: left;
 }
 
-.success-msg {
-  color: green;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-/* --- Buttons --- */
-button {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 10px;
-  font-size: 0.95rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease;
+/* Button */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px 0;
   margin-top: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-button:hover:enabled {
-  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
+button[type="submit"]:hover:enabled {
   transform: scale(1.03);
+  background: linear-gradient(135deg, #5a6ad8, #6c3fb0);
 }
 
 button:disabled {
@@ -79,3 +92,38 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Success & Error messages (fixed like auth) */
+.success,
+.error {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 250px;
+  max-width: 400px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: slideFade 3s forwards;
+  cursor: pointer;
+}
+
+/* Slide down and fade animation */
+@keyframes slideFade {
+  0%   { opacity: 0; transform: translate(-50%, -20px); }
+  10%  { opacity: 1; transform: translate(-50%, 0); }
+  80%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+.success {
+  background: #38a169;
+}
+
+.error {
+  background: #f87171;
+}

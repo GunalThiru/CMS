@@ -1,49 +1,39 @@
 from flask import Blueprint, request, jsonify
-from extensions import db
-from models import Feedback, User
+from models import db, Feedback, ComplaintAssignment
 
-feedback_bp = Blueprint('feedback', __name__)
+feedback_bp = Blueprint('feedback', __name__, url_prefix='/feedback')
 
-@feedback_bp.route('/feedback', methods=['POST'])
-def give_feedback():
+@feedback_bp.route('', methods=['POST'])
+def submit_feedback():
     data = request.json
+    complaint_id = data.get('complaint_id')
+    staff_id = data.get('staff_id')
+    customer_id = data.get('customer_id')
+    rating = data.get('rating')
+    description = data.get('description', '')
 
-    staff_id = data.get("staff_id")
-    customer_id = data.get("customer_id")
-    rating = data.get("rating")
-    description = data.get("description", "")
+    if not all([complaint_id, staff_id, customer_id, rating]):
+        return jsonify({"error": "complaint_id, staff_id, customer_id, and rating are required"}), 400
 
-    # Validate user IDs
-    staff = User.query.get(staff_id)
-    customer = User.query.get(customer_id)
+    # Check if staff is assigned to complaint
+    assignment = ComplaintAssignment.query.filter_by(complaint_id=complaint_id, assigned_to=staff_id).first()
+    if not assignment:
+        return jsonify({"error": "Staff is not assigned to this complaint"}), 400
 
-    if not staff or staff.role != "staff":
-        return jsonify({"error": "Invalid staff ID"}), 400
-
-    if not customer or customer.role != "customer":
-        return jsonify({"error": "Invalid customer ID"}), 400
-
-    if not rating or not (1 <= rating <= 5):
-        return jsonify({"error": "Rating must be between 1–5"}), 400
+    if not (1 <= rating <= 5):
+        return jsonify({"error": "Rating must be between 1 and 5"}), 400
 
     feedback = Feedback(
+        complaint_id=complaint_id,
         staff_id=staff_id,
         customer_id=customer_id,
         rating=rating,
         description=description
     )
-
     db.session.add(feedback)
     db.session.commit()
 
-    return jsonify({"message": "Feedback submitted successfully"}), 200
-@feedback_bp.route('/feedback/staff/<int:staff_id>', methods=['GET'])
-def get_feedback_for_staff(staff_id):                                                       
-    feedbacks = Feedback.query.filter_by(staff_id=staff_id).all()
-    return jsonify([f.to_dict() for f in feedbacks]), 200                   
-
-
-
-
-
-                                
+    return jsonify({
+        "message": "Feedback submitted successfully",
+        "feedback": feedback.to_dict()
+    }), 200
